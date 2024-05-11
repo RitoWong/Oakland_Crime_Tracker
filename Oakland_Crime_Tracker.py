@@ -46,7 +46,7 @@ def display_crime_data(data):
 def main():
     st.set_page_config(page_title="Oakland Crime Tracker", page_icon="📌")
     st.title("Hate Crime Incidents💥")
-    filepath = "C:/Users/ritow/Desktop/Rito project/data.csv"
+    filepath = "data.csv"
     data = load_data(filepath)
     
     st.sidebar.title("Search Options")
