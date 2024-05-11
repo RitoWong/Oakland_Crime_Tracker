@@ -39,7 +39,7 @@ def main():
     
     st.title("Oakland Crime Heat Map🔥")
 
-    filepath = "C:/Users/ritow/Desktop/Rito project/data.csv"  
+    filepath = "data.csv"  
     data = load_data(filepath)
 
     st.sidebar.title("Options")
