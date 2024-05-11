@@ -39,7 +39,7 @@ def main():
     
     st.title("Oakland Crime Heat Map🔥")
 
-    filepath = "data.csv"  
+    filepath = "data.csv" 
     data = load_data(filepath)
 
     st.sidebar.title("Options")
