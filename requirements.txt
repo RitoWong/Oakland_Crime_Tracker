@@ -1,9 +1,0 @@
-pandas==2.2.2
-folium==0.16.0
-streamlit-folium==0.20.0
-plotly==5.21.0
-openrouteservice==2.3.3
-shapely==2.0.4
-geopandas==0.14.4
-selenium==4.20.0
-webdriver-manager==4.0.1
