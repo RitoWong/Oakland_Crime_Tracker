@@ -35,7 +35,7 @@ def send_email(user_name, user_email, subject, message):
         server.quit()
 
 def main():
-    st.set_page_config(page_title="Recommendations for Improvement", page_icon="📧")
+    st.set_page_config(page_title="Oakland Crime Tracker", page_icon="📌")
     
     st.title("Recommendations for Improvement")
 
