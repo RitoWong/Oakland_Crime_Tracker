@@ -37,7 +37,7 @@ def send_email(user_name, user_email, subject, message):
 def main():
     st.set_page_config(page_title="Oakland Crime Tracker", page_icon="📌")
     
-    st.title("Recommendations for Improvement")
+    st.title("Recommendations for Improvement🗨")
 
     # Introduction
     st.markdown("Please leave your comments or suggestions to help us improve this program.")
