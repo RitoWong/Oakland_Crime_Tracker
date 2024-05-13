@@ -81,42 +81,45 @@ def main():
         end_coords = parse_coordinates(st.session_state['end_coords'])
 
         if start_coords and end_coords:
-            try:
-                route = get_route(start_coords, end_coords, client)
-                folium_map = folium.Map(location=[start_coords[0], start_coords[1]], zoom_start=12)
-                folium.Marker([start_coords[0], start_coords[1]], tooltip='Start Location',
-                              icon=folium.Icon(color='blue', icon='play')).add_to(folium_map)
-                folium.Marker([end_coords[0], end_coords[1]], tooltip='End Location',
-                              icon=folium.Icon(color='blue', icon='flag')).add_to(folium_map)
-                folium.GeoJson(route, name='route').add_to(folium_map)
+            route = get_route(start_coords, end_coords, client)
+            folium_map = folium.Map(location=[start_coords[0], start_coords[1]], zoom_start=12)
+            folium.Marker([start_coords[0], start_coords[1]], tooltip='Start Location',
+                          icon=folium.Icon(color='blue', icon='play')).add_to(folium_map)
+            folium.Marker([end_coords[0], end_coords[1]], tooltip='End Location',
+                          icon=folium.Icon(color='blue', icon='flag')).add_to(folium_map)
+            folium.GeoJson(route, name='route').add_to(folium_map)
 
-                route_line = LineString([tuple(coord) for coord in route['features'][0]['geometry']['coordinates']])
-                folium_map.fit_bounds([[route_line.bounds[1], route_line.bounds[0]], [route_line.bounds[3], route_line.bounds[2]]])
+            route_line = LineString([tuple(coord) for coord in route['features'][0]['geometry']['coordinates']])
+            folium_map.fit_bounds([[route_line.bounds[1], route_line.bounds[0]], [route_line.bounds[3], route_line.bounds[2]]])
 
-                gdf = load_data()
-                current_date = datetime.datetime.now()
-                fourteen_days_ago = current_date - datetime.timedelta(days=14)
-                gdf = gdf[gdf['DATETIME'] >= fourteen_days_ago]
-                gdf['distance'] = gdf.apply(lambda row: route_line.distance(row['geometry']), axis=1)
-                gdf_filtered = gdf[gdf['distance'] <= 50]
+            gdf = load_data()
+            current_date = datetime.datetime.now()
+            fourteen_days_ago = current_date - datetime.timedelta(days=14)
+            gdf = gdf[gdf['DATETIME'] >= fourteen_days_ago]
+            gdf['distance'] = gdf.apply(lambda row: route_line.distance(row['geometry']), axis=1)
+            gdf_filtered = gdf[gdf['distance'] <= 50]
 
-                for index, crime in gdf_filtered.iterrows():
-                    folium.Marker(
-                        [crime.geometry.y, crime.geometry.x],
-                        popup=f"Crime Type: {crime['CRIMETYPE']}<br>Description: {crime['DESCRIPTION']}<br>Date/Time: {crime['DATETIME']}",
-                        icon=folium.Icon(color='red', icon='info-sign')
-                    ).add_to(folium_map)
+            for index, crime in gdf_filtered.iterrows():
+                folium.Marker(
+                    [crime.geometry.y, crime.geometry.x],
+                    popup=f"Crime Type: {crime['CRIMETYPE']}<br>Description: {crime['DESCRIPTION']}<br>Date/Time: {crime['DATETIME']}",
+                    icon=folium.Icon(color='red', icon='info-sign')
+                ).add_to(folium_map)
 
-                folium_display = st_folium(folium_map, width=725, height=500)
+            folium_display = st_folium(folium_map, width=725, height=500)
 
-                # Add a button to take a screenshot
-                if st.button("Take Screenshot of Map"):
-                    html_path = save_map(folium_map)
-                    screenshot_path = take_screenshot(html_path)
-                    st.image(screenshot_path)
-
-            except Exception as e:
-                st.error(f"An error occurred: {e}")
+            # Add a button to take and download a screenshot
+            if st.button("Take Screenshot of Map"):
+                html_path = save_map(folium_map)
+                screenshot_path = take_screenshot(html_path)
+                st.image(screenshot_path)
+                with open(screenshot_path, "rb") as file:
+                    btn = st.download_button(
+                        label="Download Screenshot",
+                        data=file,
+                        file_name="map_screenshot.jpg",
+                        mime="image/jpeg"
+                    )
 
 if __name__ == '__main__':
     main()
