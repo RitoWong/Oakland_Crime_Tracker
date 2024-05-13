@@ -41,24 +41,18 @@ def save_map(map, filename='map.html'):
     return filename
 
 def take_screenshot(html_path, output_filename='screenshot.jpg'):
-    # Setup options for Chrome
     chrome_options = webdriver.ChromeOptions()
-    chrome_options.add_argument('--headless')  # Run Chrome in headless mode (no GUI)
-    chrome_options.add_argument('--no-sandbox')  # Bypass OS security model
-    chrome_options.add_argument('--disable-dev-shm-usage')  # Overcome limited resource problems
+    chrome_options.add_argument('--headless')
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--disable-dev-shm-usage')
 
-    # Set up Chrome WebDriver using Service from ChromeDriverManager
-    service = Service(ChromeDriverManager().install())
+    # Specify the path to ChromeDriver manually
+    service = Service('/path/to/chromedriver')  # Adjust this path
     browser = webdriver.Chrome(service=service, options=chrome_options)
 
-    # Open the file in the browser
     local_url = f'file://{os.path.abspath(html_path)}'
     browser.get(local_url)
-    
-    # Allow time for the map to load completely
     time.sleep(5)
-    
-    # Take the screenshot
     browser.save_screenshot(output_filename)
     browser.quit()
     return output_filename
