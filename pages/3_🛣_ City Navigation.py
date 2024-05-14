@@ -8,6 +8,7 @@ import geopandas as gpd
 import datetime
 import os
 
+# Load the crime data from CSV file
 @st.cache_data
 def load_data():
     df = pd.read_csv('data.csv')
@@ -42,6 +43,7 @@ def main():
     st.write('Explore the city, find routes, and view crime hotspots using coordinates.')
     client = openrouteservice.Client(key='5b3ce3597851110001cf624825b44055c4344562b3a21df58da89bbd')
 
+    # Input fields for start and end locations
     start_coords = st.text_input('Enter start location (format: lat,lon):')
     end_coords = st.text_input('Enter end location (format: lat,lon):')
 
@@ -57,6 +59,8 @@ def main():
             try:
                 route = get_route(start_coords, end_coords, client)
                 folium_map = folium.Map(location=[start_coords[0], start_coords[1]], zoom_start=12)
+
+                # Add markers for the start and end locations
                 folium.Marker([start_coords[0], start_coords[1]], tooltip='Start Location',
                               icon=folium.Icon(color='blue', icon='play')).add_to(folium_map)
                 folium.Marker([end_coords[0], end_coords[1]], tooltip='End Location',
@@ -66,6 +70,7 @@ def main():
                 route_line = LineString([tuple(coord) for coord in route['features'][0]['geometry']['coordinates']])
                 folium_map.fit_bounds([[route_line.bounds[1], route_line.bounds[0]], [route_line.bounds[3], route_line.bounds[2]]])
 
+                # Load recent crime data
                 gdf = load_data()
                 current_date = datetime.datetime.now()
                 fourteen_days_ago = current_date - datetime.timedelta(days=14)
@@ -73,6 +78,7 @@ def main():
                 gdf['distance'] = gdf.apply(lambda row: route_line.distance(row['geometry']), axis=1)
                 gdf_filtered = gdf[gdf['distance'] <= 50]
 
+                # Add crime data markers to the map
                 for index, crime in gdf_filtered.iterrows():
                     folium.Marker(
                         [crime.geometry.y, crime.geometry.x],
@@ -82,6 +88,7 @@ def main():
 
                 folium_display = st_folium(folium_map, width=725, height=500)
 
+                # Allow the user to download the screenshot
                 html_path = save_map(folium_map)
                 with open(html_path, "rb") as file:
                     st.download_button(
@@ -96,3 +103,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+# This final project is developed by Chun San Wong (Rito) for CIS 27 
