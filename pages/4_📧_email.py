@@ -42,7 +42,7 @@ def main():
     # Introduction
     st.markdown("Please leave your comments or suggestions to help us improve this program.")
 
-    # User Information
+    # Allow the user to input their info
     user_name = st.text_input("Your Name:")
     user_email = st.text_input("Your Email:")
 
@@ -59,6 +59,7 @@ def main():
         else:
             st.warning("Please fill in all the fields.")
 
-# Run the app
 if __name__ == "__main__":
     main()
+
+# This final project is developed by Chun San Wong (Rito) for CIS 27 
