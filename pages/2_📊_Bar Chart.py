@@ -39,7 +39,7 @@ def main():
     st.set_page_config(page_title="Oakland Crime Tracker", page_icon="📌")
     st.title("Crime Bar Chart📊")
 
-    filepath = "C:/Users/ritow/Desktop/Rito project/data.csv"  # Update the file path
+    filepath = "data.csv"  # Update the file path
     data = load_data(filepath)
 
     st.sidebar.title("Options")
