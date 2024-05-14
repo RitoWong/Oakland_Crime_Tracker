@@ -3,7 +3,7 @@ import streamlit as st
 from datetime import datetime, timedelta
 import plotly.express as px
 
-# Load the data
+# Load the crime data from CSV file
 @st.cache_data
 def load_data(filepath):
     data = pd.read_csv(filepath)
@@ -39,7 +39,7 @@ def main():
     st.set_page_config(page_title="Oakland Crime Tracker", page_icon="📌")
     st.title("Crime Bar Chart📊")
 
-    filepath = "data.csv"  
+    filepath = "C:/Users/ritow/Desktop/Rito project/data.csv"  # Update the file path
     data = load_data(filepath)
 
     st.sidebar.title("Options")
@@ -75,3 +75,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+# This final project is developed by Chun San Wong (Rito) for CIS 27 
